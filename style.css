@@ -1,0 +1,285 @@
+/* =============================================
+   CSS CUSTOM PROPERTIES (variables)
+   ============================================= */
+:root {
+  --cyan:       #00ffc8;
+  --cyan-dim:   rgba(0, 255, 200, 0.45);
+  --orange:     #ff8c42;
+  --white:      #f0f8ff;
+  --glass-bg:   rgba(2, 12, 28, 0.55);
+  --glass-border: rgba(0, 255, 200, 0.22);
+  --glass-blur: 14px;
+  --font-display: 'Orbitron', sans-serif;
+  --font-mono:    'Share Tech Mono', monospace;
+}
+
+/* =============================================
+   RESET & BASE
+   ============================================= */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  overflow: hidden; /* single-screen, no scroll */
+}
+
+body {
+  font-family: var(--font-mono);
+  color: var(--white);
+  background: #000;
+}
+
+a {
+  color: var(--cyan-dim);
+  text-decoration: none;
+}
+a:hover { color: var(--cyan); }
+
+/* =============================================
+   BACKGROUND — Earth photo
+   ============================================= */
+.bg {
+  position: fixed;
+  inset: 0;
+  background: url('earth.png') center center / cover no-repeat;
+  /* slight dark vignette so text pops */
+  filter: brightness(0.88);
+  z-index: 0;
+}
+
+/* Gradient overlay: space at top, opaque-ish at bottom */
+.bg::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    to bottom,
+    rgba(0, 0, 0, 0.72) 0%,     /* deep space at top */
+    rgba(0, 0, 0, 0.10) 42%,    /* transparent over Earth */
+    rgba(0, 0, 0, 0.35) 100%    /* subtle darkening at bottom */
+  );
+}
+
+/* =============================================
+   ORBIT SVG — sits in space region
+   ============================================= */
+.orbit-svg {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  /* covers roughly the top third where space is visible */
+  height: 38vh;
+  z-index: 1;
+  pointer-events: none;
+}
+
+/* =============================================
+   HEADER — in space
+   ============================================= */
+.site-header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 2;
+  text-align: center;
+  padding: 28px 24px 0;
+  pointer-events: none;
+}
+
+.header-eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.38em;
+  color: var(--cyan-dim);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.site-title {
+  font-family: var(--font-display);
+  font-weight: 900;
+  font-size: clamp(22px, 4.5vw, 54px);
+  letter-spacing: 0.12em;
+  color: var(--white);
+  text-shadow:
+    0 0 30px rgba(0, 255, 200, 0.5),
+    0 0 80px rgba(0, 255, 200, 0.2),
+    0 2px 4px rgba(0,0,0,0.8);
+  line-height: 1.1;
+}
+
+/* Live badge */
+.live-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 11px;
+  letter-spacing: 0.2em;
+  color: var(--cyan-dim);
+  pointer-events: all;
+}
+
+.pulse-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow: 0 0 8px var(--cyan);
+  animation: pulse 1.5s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { opacity: 1;   transform: scale(1);   }
+  50%       { opacity: 0.35; transform: scale(0.75); }
+}
+
+/* =============================================
+   ERROR BANNER
+   ============================================= */
+.error-banner {
+  display: none;
+  position: fixed;
+  top: 130px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(200, 40, 40, 0.75);
+  border: 1px solid rgba(255,80,80,0.5);
+  border-radius: 4px;
+  padding: 8px 18px;
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  z-index: 10;
+  backdrop-filter: blur(8px);
+}
+
+/* =============================================
+   CARDS AREA — over the Earth
+   ============================================= */
+.cards-area {
+  position: fixed;
+  bottom: 48px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(960px, 94vw);
+  z-index: 3;
+
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  grid-template-rows: auto auto;
+  gap: 14px;
+}
+
+/* =============================================
+   INDIVIDUAL CARD
+   ============================================= */
+.card {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  border-radius: 6px;
+  padding: 18px 20px 16px;
+  backdrop-filter: blur(var(--glass-blur));
+  -webkit-backdrop-filter: blur(var(--glass-blur));
+  position: relative;
+  overflow: hidden;
+  transition: border-color 0.3s, transform 0.25s;
+}
+
+.card:hover {
+  border-color: var(--cyan-dim);
+  transform: translateY(-2px);
+}
+
+/* Glowing top edge */
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0; left: 0; right: 0;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--cyan-dim), transparent);
+}
+
+/* Wide card spans 2 columns */
+.card-wide {
+  grid-column: span 2;
+}
+
+.card-icon {
+  font-size: 13px;
+  color: var(--cyan-dim);
+  margin-bottom: 6px;
+}
+
+.card-label {
+  font-size: 10px;
+  letter-spacing: 0.28em;
+  color: rgba(200, 240, 230, 0.55);
+  text-transform: uppercase;
+  margin-bottom: 8px;
+}
+
+.card-value {
+  font-family: var(--font-display);
+  font-weight: 700;
+  font-size: clamp(16px, 2.2vw, 24px);
+  color: var(--white);
+  line-height: 1.1;
+  transition: color 0.25s, text-shadow 0.25s;
+}
+
+.card-value--location {
+  font-size: clamp(13px, 1.6vw, 18px);
+  font-weight: 400;
+}
+
+/* Flash cyan when value updates */
+.card-value.flash {
+  color: var(--cyan);
+  text-shadow: 0 0 14px rgba(0,255,200,0.55);
+}
+
+.card-unit {
+  margin-top: 6px;
+  font-size: 10px;
+  letter-spacing: 0.15em;
+  color: rgba(255,255,255,0.28);
+}
+
+/* =============================================
+   FOOTER
+   ============================================= */
+.site-footer {
+  position: fixed;
+  bottom: 14px;
+  left: 0;
+  right: 0;
+  text-align: center;
+  font-size: 10px;
+  letter-spacing: 0.18em;
+  color: rgba(255,255,255,0.22);
+  z-index: 3;
+}
+
+/* =============================================
+   RESPONSIVE — stack cards on smaller screens
+   ============================================= */
+@media (max-width: 640px) {
+  .cards-area {
+    grid-template-columns: repeat(2, 1fr);
+    bottom: 30px;
+  }
+  .card-wide {
+    grid-column: span 2;
+  }
+  .site-title {
+    font-size: 24px;
+  }
+}
