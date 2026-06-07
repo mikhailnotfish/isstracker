@@ -1,6 +1,4 @@
-/* =============================================
-   CSS CUSTOM PROPERTIES (variables)
-   ============================================= */
+
 :root {
   --cyan:       #00ffc8;
   --cyan-dim:   rgba(0, 255, 200, 0.45);
@@ -13,9 +11,7 @@
   --font-mono:    'Share Tech Mono', monospace;
 }
 
-/* =============================================
-   RESET & BASE
-   ============================================= */
+
 *, *::before, *::after {
   margin: 0;
   padding: 0;
@@ -40,9 +36,7 @@ a {
 }
 a:hover { color: var(--cyan); }
 
-/* =============================================
-   BACKGROUND — Earth photo
-   ============================================= */
+
 .bg {
   position: fixed;
   inset: 0;
@@ -65,9 +59,7 @@ a:hover { color: var(--cyan); }
   );
 }
 
-/* =============================================
-   ORBIT SVG — sits in space region
-   ============================================= */
+
 .orbit-svg {
   position: fixed;
   top: 0;
@@ -79,9 +71,7 @@ a:hover { color: var(--cyan); }
   pointer-events: none;
 }
 
-/* =============================================
-   HEADER — in space
-   ============================================= */
+
 .site-header {
   position: fixed;
   top: 0;
@@ -115,7 +105,6 @@ a:hover { color: var(--cyan); }
   line-height: 1.1;
 }
 
-/* Live badge */
 .live-badge {
   display: inline-flex;
   align-items: center;
@@ -142,9 +131,7 @@ a:hover { color: var(--cyan); }
   50%       { opacity: 0.35; transform: scale(0.75); }
 }
 
-/* =============================================
-   ERROR BANNER
-   ============================================= */
+
 .error-banner {
   display: none;
   position: fixed;
@@ -161,9 +148,6 @@ a:hover { color: var(--cyan); }
   backdrop-filter: blur(8px);
 }
 
-/* =============================================
-   CARDS AREA — over the Earth
-   ============================================= */
 .cards-area {
   position: fixed;
   bottom: 48px;
@@ -178,9 +162,7 @@ a:hover { color: var(--cyan); }
   gap: 14px;
 }
 
-/* =============================================
-   INDIVIDUAL CARD
-   ============================================= */
+
 .card {
   background: var(--glass-bg);
   border: 1px solid var(--glass-border);
@@ -253,9 +235,7 @@ a:hover { color: var(--cyan); }
   color: rgba(255,255,255,0.28);
 }
 
-/* =============================================
-   FOOTER
-   ============================================= */
+
 .site-footer {
   position: fixed;
   bottom: 14px;
@@ -268,9 +248,7 @@ a:hover { color: var(--cyan); }
   z-index: 3;
 }
 
-/* =============================================
-   RESPONSIVE — stack cards on smaller screens
-   ============================================= */
+
 @media (max-width: 640px) {
   .cards-area {
     grid-template-columns: repeat(2, 1fr);
