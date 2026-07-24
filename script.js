@@ -1,108 +1,118 @@
+const ISS_API = "https://api.wheretheiss.at/v1/satellites/25544";
+const GEO_API = "https://api.bigdatacloud.net/data/reverse-geocode-client";
 
-const ISS_API      = 'https://api.wheretheiss.at/v1/satellites/25544';
-const GEO_API_BASE = 'https://api.bigdatacloud.net/data/reverse-geocode-client';
-const UPDATE_EVERY = 5; // seconds between ISS position refreshes
+const UPDATE_INTERVAL = 5;
 
+let countdown = UPDATE_INTERVAL;
 
-let countdown = UPDATE_EVERY;
+const latEl = document.getElementById("lat");
+const lonEl = document.getElementById("lon");
+const altEl = document.getElementById("alt");
+const velEl = document.getElementById("vel");
+const locationEl = document.getElementById("location-text");
+const countdownEl = document.getElementById("countdown-label");
+const errorBanner = document.getElementById("error-banner");
 
-
-const elLat       = document.getElementById('lat');
-const elLon       = document.getElementById('lon');
-const elAlt       = document.getElementById('alt');
-const elVel       = document.getElementById('vel');
-const elLocation  = document.getElementById('location-text');
-const elCountdown = document.getElementById('countdown-label');
-const elError     = document.getElementById('error-banner');
-
-
-
-
-function formatCoord(val, posDir, negDir) {
-  const dir = val >= 0 ? posDir : negDir;
-  return `${Math.abs(val).toFixed(4)}° ${dir}`;
+function formatCoordinate(value, positive, negative) {
+    return `${Math.abs(value).toFixed(4)}° ${value >= 0 ? positive : negative}`;
 }
 
+function flash(element) {
+    element.classList.add("flash");
 
-function flashValue(el) {
-  el.classList.add('flash');
-  setTimeout(() => el.classList.remove('flash'), 700);
+    setTimeout(() => {
+        element.classList.remove("flash");
+    }, 500);
 }
 
+async function reverseGeocode(lat, lon) {
 
+    try {
 
+        const response = await fetch(
+            `${GEO_API}?latitude=${lat}&longitude=${lon}&localityLanguage=en`
+        );
 
-async function getLocationName(lat, lon) {
-  try {
-    const url = `${GEO_API_BASE}?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
-    const res  = await fetch(url);
-    const data = await res.json();
+        if (!response.ok)
+            throw new Error();
 
-    const parts = [];
-    if (data.locality)              parts.push(data.locality);
-    if (data.principalSubdivision)  parts.push(data.principalSubdivision);
-    if (data.countryName)           parts.push(data.countryName);
+        const data = await response.json();
 
-    if (parts.length > 0) return parts.join(', ');
-    if (data.ocean)        return '🌊 ' + data.ocean;
-    return 'Open Ocean / Remote Region';
-  } catch {
-    return 'Location data unavailable';
-  }
+        const parts = [];
+
+        if (data.locality) parts.push(data.locality);
+        if (data.principalSubdivision) parts.push(data.principalSubdivision);
+        if (data.countryName) parts.push(data.countryName);
+
+        if (parts.length)
+            return parts.join(", ");
+
+        if (data.ocean)
+            return data.ocean;
+
+        return "Remote Region";
+
+    } catch {
+
+        return "Location unavailable";
+
+    }
+
 }
-
-
-
 
 async function updateISS() {
-  try {
-   
-    const response = await fetch(ISS_API);
 
-  
-    const data = await response.json();
+    try {
 
+        const response = await fetch(ISS_API);
 
-    const lat = data.latitude;    
-    const lon = data.longitude;   
-    const alt = data.altitude;    
-    const vel = data.velocity;    
+        if (!response.ok)
+            throw new Error(`HTTP ${response.status}`);
 
+        const iss = await response.json();
 
-    elLat.textContent = formatCoord(lat, 'N', 'S');
-    elLon.textContent = formatCoord(lon, 'E', 'W');
-    elAlt.textContent = alt.toFixed(1);
-    elVel.textContent = Math.round(vel).toLocaleString();
+        latEl.textContent = formatCoordinate(iss.latitude, "N", "S");
+        lonEl.textContent = formatCoordinate(iss.longitude, "E", "W");
+        altEl.textContent = `${iss.altitude.toFixed(1)}`;
+        velEl.textContent = Math.round(iss.velocity).toLocaleString();
 
+        flash(latEl);
+        flash(lonEl);
+        flash(altEl);
+        flash(velEl);
 
-    [elLat, elLon, elAlt, elVel].forEach(flashValue);
+        locationEl.textContent = await reverseGeocode(
+            iss.latitude,
+            iss.longitude
+        );
 
+        errorBanner.style.display = "none";
 
-    getLocationName(lat, lon).then(name => {
-      elLocation.textContent = name;
-    });
+    } catch (err) {
 
-    elError.style.display = 'none';
+        errorBanner.style.display = "block";
+        console.error(err);
 
-  } catch (err) {
+    }
 
-    elError.style.display = 'block';
-    console.error('ISS API error:', err);
-  }
 }
 
+function updateCountdown() {
 
-function tick() {
-  elCountdown.textContent = `UPDATING IN ${countdown}s`;
+    countdownEl.textContent = `Next update in ${countdown}s`;
 
-  if (countdown <= 0) {
-    countdown = UPDATE_EVERY;
-    updateISS();
-  } else {
-    countdown--;
-  }
+    if (countdown === 0) {
+
+        countdown = UPDATE_INTERVAL;
+        updateISS();
+
+    } else {
+
+        countdown--;
+
+    }
+
 }
 
-
-updateISS();               
-setInterval(tick, 1000);  
+updateISS();
+setInterval(updateCountdown, 1000);

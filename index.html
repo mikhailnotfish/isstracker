@@ -1,98 +1,90 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ISS Current Location</title>
-  <link rel="preconnect" href="https://fonts.googleapis.com"/>
-  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Share+Tech+Mono&display=swap" rel="stylesheet"/>
-  <link rel="stylesheet" href="style.css"/>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
 
+<div class="background"></div>
 
-  <div class="bg"></div>
+<header class="header">
 
+    <p class="status">
+        ● LIVE TELEMETRY
+    </p>
 
-  <svg class="orbit-svg" viewBox="0 0 1440 300" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+    <h1>ISS Current Location</h1>
 
-    <ellipse id="orbit-path-shape"
-      cx="720" cy="340" rx="780" ry="200"
-      fill="none"
-      stroke="white"
-      stroke-width="1.5"
-      stroke-dasharray="10 14"
-      opacity="0.55"
-    />
-
-    <circle id="orbit-traveller" r="5" fill="white" opacity="0.9">
-      <animateMotion dur="18s" repeatCount="indefinite">
-        <mpath href="#orbit-path-shape-motion"/>
-      </animateMotion>
-    </circle>
-
-    <path id="orbit-path-shape-motion"
-      d="M -60,340 A 780,200 0 1,1 1500,340 A 780,200 0 1,1 -60,340"
-      fill="none" stroke="none"/>
-  </svg>
-
-
-  <header class="site-header">
-    <div class="header-eyebrow">LIVE · ORBITAL TRACKING</div>
-    <h1 class="site-title">ISS CURRENT LOCATION</h1>
-    <div class="live-badge">
-      <span class="pulse-dot"></span>
-      <span id="countdown-label">UPDATING IN 5s</span>
-    </div>
-  </header>
-
-
-  <div class="error-banner" id="error-banner">⚠ Could not reach ISS API — retrying…</div>
-
-
-  <main class="cards-area">
-
-    <div class="card" id="card-lat">
-      <div class="card-icon"></div>
-      <div class="card-label">Latitude</div>
-      <div class="card-value" id="lat">—</div>
-      <div class="card-unit">DEGREES N / S</div>
+    <div class="update-time">
+        Next update in <span id="countdown-label">5s</span>
     </div>
 
-    <div class="card" id="card-lon">
-      <div class="card-icon"></div>
-      <div class="card-label">Longitude</div>
-      <div class="card-value" id="lon">—</div>
-      <div class="card-unit">DEGREES E / W</div>
-    </div>
+</header>
 
-    <div class="card card-wide" id="card-location">
-      <div class="card-icon"></div>
-      <div class="card-label">Flying Over</div>
-      <div class="card-value card-value--location" id="location-text">Fetching…</div>
-    </div>
+<div id="error-banner" class="error-banner">
+    Unable to retrieve live telemetry.
+</div>
 
-    <div class="card" id="card-alt">
-      <div class="card-icon">◎</div>
-      <div class="card-label">Altitude</div>
-      <div class="card-value" id="alt">408</div>
-      <div class="card-unit">KM ABOVE EARTH</div>
-    </div>
+<main class="dashboard">
 
-    <div class="card" id="card-vel">
-      <div class="card-icon"></div>
-      <div class="card-label">Velocity</div>
-      <div class="card-value" id="vel">27,600</div>
-      <div class="card-unit">KM/H ORBITAL SPEED</div>
-    </div>
+    <section class="primary-panel">
 
-  </main>
+        <div class="label">Current Position</div>
 
-  <footer class="site-footer">
-    Data · <a href="https://wheretheiss.at" target="_blank" rel="noopener">wheretheiss.at</a>
-    &nbsp;·&nbsp; Geocoding · <a href="https://bigdatacloud.com" target="_blank" rel="noopener">bigdatacloud.com</a>
-  </footer>
+        <div class="location" id="location-text">
+            Fetching...
+        </div>
 
-  <script src="script.js"></script>
+    </section>
+
+    <section class="data-grid">
+
+        <article class="data-card">
+            <div class="label">Latitude</div>
+            <div class="value" id="lat">—</div>
+            <div class="unit">Degrees</div>
+        </article>
+
+        <article class="data-card">
+            <div class="label">Longitude</div>
+            <div class="value" id="lon">—</div>
+            <div class="unit">Degrees</div>
+        </article>
+
+        <article class="data-card">
+            <div class="label">Altitude</div>
+            <div class="value" id="alt">408</div>
+            <div class="unit">km</div>
+        </article>
+
+        <article class="data-card">
+            <div class="label">Velocity</div>
+            <div class="value" id="vel">27,600</div>
+            <div class="unit">km/h</div>
+        </article>
+
+    </section>
+
+</main>
+
+<footer>
+
+    Data provided by
+    <a href="https://wheretheiss.at" target="_blank" rel="noopener">wheretheiss.at</a>
+    ·
+    Reverse geocoding by
+    <a href="https://bigdatacloud.com" target="_blank" rel="noopener">BigDataCloud</a>
+
+</footer>
+
+<script src="script.js"></script>
+
 </body>
 </html>
